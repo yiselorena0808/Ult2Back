@@ -5,66 +5,22 @@ import { json } from "stream/consumers"
 const usuarioService = new UsuarioService()
 
 class UsuariosController {
-  async register({ request, response }) {
-    try {
-      const {
-        nombre,
-        apellido,
-        nombre_usuario,
-        correo_electronico,
-        cargo,
-        contrasena,
-        confirmacion
-      } = request.body()
+   async register({ request, response }) {
+    const { nombre, apellido, nombre_usuario, correo_electronico, cargo, contrasena, confirmacion } = request.body()
 
-      const resultado = await usuarioService.register(
-        nombre,
-        apellido,
-        nombre_usuario,
-        correo_electronico,
-        cargo,
-        contrasena,
-        confirmacion
-      )
-      console.log('Resultado del registro:', resultado);
-
-      if (resultado.mensaje !== 'Registro correcto') {
-        return response.status(400).json(resultado)
-      }
-
-      return response.status(201).json({ mensaje: 'Registro correcto', usuario: resultado.user 
-});
-
-
-    } catch (error) {
-      return response.status(500).json({ error: error.message })
+    if (contrasena !== confirmacion) {
+      return response.status(400).json({ mensaje: 'Las contraseñas no coinciden' })
     }
+
+    const respuesta = await usuarioService.register(nombre, apellido, nombre_usuario, correo_electronico, cargo, contrasena,confirmacion)
+    return response.status(201).json({ msj: 'usuario registrado', respuesta })
   }
 
-  async login({ request, response }) {
-    try {
-      const { correo_electronico, contrasena } = request.body()
-
-      const resultado = await usuarioService.login(correo_electronico, contrasena)
-
-      if (typeof resultado === 'string') {
-        // Es un error como "usuario no encontrado" o "contraseña incorrecta"
-        return response.status(401).json({ mensaje: resultado })
-      }
-
-        const { token, user } = resultado;
-
-      return response.json({
-        mensaje: 'bienvenido',
-        token,
-        nombre: user.nombre,
-        correo: user.correo_electronico,
-      })
-
-    } catch (e) {
-      return response.status(500).json({ error: e.message })
+    async login({request, response}){
+        const {correo_electronico, contrasena} = request.body()
+        const lista=await usuarioService.login(correo_electronico,contrasena)
+        return response.json(lista)
     }
-  }
 
   async listarUsuarios({ response }) {
     try {

@@ -2,32 +2,16 @@ import bcrypt from 'bcryptjs'
 import Usuario from '#models/usuario';
 import jwt from 'jsonwebtoken'
 
-const SECRET = process.env.JWT_SECRET;
+const SECRET = process.env.JWT_SECRET || 'sstrict'
 
 
 class UsuarioService {
-async register(
-    nombre: string,
-    apellido: string,
-    nombre_usuario: string,
-    correo_electronico: string,
-    cargo: string,
-    contrasena: string,
-    confirmacion: string
-  ) {
-    const existente = await Usuario.query()
-      .where('correo_electronico', correo_electronico)
-      .first();
-
-    if (existente) {
-      return { mensaje: 'Correo ya está registrado' };
-    }
-
+ async register(nombre, apellido, nombre_usuario, correo_electronico, cargo, contrasena, confirmacion) {
     if (contrasena !== confirmacion) {
-      return { mensaje: 'Las contraseñas no coinciden' };
+      return { mensaje: 'Las contraseñas no coinciden' }
     }
 
-    const hashedPassword = await bcrypt.hash(contrasena, 10);
+    const hash = await bcrypt.hash(contrasena, 10)
 
     const user = await Usuario.create({
       nombre,
@@ -35,40 +19,55 @@ async register(
       nombre_usuario,
       correo_electronico,
       cargo,
-      contrasena: hashedPassword,
-    });
+      contrasena: hash,
+      
+    })
 
-    return { mensaje: 'Registro correcto', user };
+    const token = jwt.sign(
+      {
+        id: user.id,
+        correo_electronico: user.correo_electronico,
+        timestamp: Date.now()
+      },
+      SECRET,
+      { expiresIn: '1h' }
+    )
+
+    return {
+      mensaje: 'Registro correcto',
+      user,
+      token
+    }
   }
 
   async login(correo_electronico: string, contrasena: string) {
-  if (!correo_electronico || !contrasena) {
-    throw new Error("El correo y la contraseña son obligatorios");
+    if (!correo_electronico || !contrasena) {
+      return 'Campos obligatorios'
+    }
+
+    const user = await Usuario.findBy('correo_electronico', correo_electronico)
+    if (!user) {
+      return 'El usuario no existe'
+    }
+
+    const isValid = await bcrypt.compare(contrasena, user.contrasena)
+    if (!isValid) {
+      return 'Contraseña incorrecta'
+    }
+
+    const token = jwt.sign(
+      {
+        id: user.id,
+        correo_electronico: user.correo_electronico,
+        timestamp: Date.now()
+      },
+      SECRET,
+      { expiresIn: '1h' }
+    )
+
+    return { token, user }
   }
 
-  const user = await Usuario.query()
-    .where('correo_electronico', correo_electronico)
-    .first();
-
-  if (!user) {
-    throw new Error("Usuario no encontrado");
-  }
-
-  const isValid = await bcrypt.compare(contrasena, user.contrasena);
-  if (!isValid) {
-    throw new Error("Contraseña incorrecta");
-  }
-
-  const token = jwt.sign(
-    { id: user.id },
-    SECRET,
-    { expiresIn: '1h' }
-  );
-
-  return { token, user };
-}
-
- 
   async listar() {
     return await Usuario.query()
   }
