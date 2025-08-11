@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
-import type { HasMany } from '@adonisjs/lucid/types/relations'
+import { BaseModel, belongsTo, column, hasMany } from '@adonisjs/lucid/orm'
+import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 import Reporte from './reporte.js'
 import PublicacionBlog from './publicacion_blog.js'
 import GestionEpp from './gestion_epp.js'
@@ -32,6 +32,11 @@ export default class Usuario extends BaseModel {
 
   @column()
   declare id_tenat: number
+
+  @belongsTo(() => Tenat, {
+  foreignKey: 'id_tenat',
+  })
+  declare tenat: BelongsTo<typeof Tenat>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
