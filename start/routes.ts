@@ -9,3 +9,5 @@ import './routes/GestionEppRoutes.js'
 import './routes/BlogRoutes.js'
 
 import './routes/ActividadesLudicasRoutes.js'
+
+import './routes/Tenant.js'

@@ -59,6 +59,7 @@
     "@types/pg": "^8.15.4",
     "@vinejs/vine": "^3.0.1",
     "bcryptjs": "^3.0.2",
+    "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "luxon": "^3.6.1",
     "pg": "^8.16.3",
