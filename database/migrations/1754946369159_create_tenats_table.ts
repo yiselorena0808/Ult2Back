@@ -9,7 +9,7 @@ export default class extends BaseSchema {
       table.string('nombre')
       table.string('esquema').unique()
       table.string('alias').unique()
-      table.string('estado')
+      table.boolean('estado').defaultTo(true)
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })
