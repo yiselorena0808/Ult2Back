@@ -6,13 +6,13 @@ const usuarioService = new UsuarioService()
 
 class UsuariosController {
    async register({ request, response }) {
-    const { nombre, apellido, nombre_usuario, correo_electronico, cargo, contrasena, confirmacion } = request.body()
+    const { nombre, apellido, nombre_usuario, correo_electronico, cargo, contrasena, confirmacion ,id_tenat} = request.body()
 
     if (contrasena !== confirmacion) {
       return response.status(400).json({ mensaje: 'Las contraseñas no coinciden' })
     }
 
-    const respuesta = await usuarioService.register(nombre, apellido, nombre_usuario, correo_electronico, cargo, contrasena,confirmacion)
+    const respuesta = await usuarioService.register(nombre, apellido, nombre_usuario, correo_electronico, cargo, contrasena,confirmacion,id_tenat)
     return response.status(201).json({ msj: 'usuario registrado', respuesta })
   }
 

@@ -6,7 +6,7 @@ const SECRET = process.env.JWT_SECRET || 'sstrict'
 
 
 class UsuarioService {
- async register(nombre, apellido, nombre_usuario, correo_electronico, cargo, contrasena, confirmacion) {
+ async register(nombre:string, apellido:string, nombre_usuario:string, correo_electronico:string, cargo:string, contrasena:string, confirmacion:string,id_tenant:number) {
     if (contrasena !== confirmacion) {
       return { mensaje: 'Las contraseñas no coinciden' }
     }
@@ -20,6 +20,8 @@ class UsuarioService {
       correo_electronico,
       cargo,
       contrasena: hash,
+      id_tenat:id_tenant
+      
       
     })
 
@@ -72,11 +74,11 @@ class UsuarioService {
     return await Usuario.query()
   }
 
-  async listarId(id) {
+  async listarId(id:number) {
     return await Usuario.query().where('id', id)
   }
 
-  async actualizar(id, datos) {
+  async actualizar(id:number, datos:any) {
     const usuario = await Usuario.findBy('id', id)
     if (usuario) {
       usuario.merge(datos)
@@ -87,7 +89,7 @@ class UsuarioService {
     }
   }
 
-  async eliminar(id) {
+  async eliminar(id:number) {
     const usuario = await Usuario.findBy('id', id)
     if (usuario) {
       await usuario.delete()

@@ -1,7 +1,7 @@
 import ActividadLudica from '#models/actividad_ludica'
 
 class ActividadLudicaService {
-  async crear(datos) {
+  async crear(datos:any) {
     return await ActividadLudica.create(datos)
   }
 
@@ -9,11 +9,11 @@ class ActividadLudicaService {
     return await ActividadLudica.query()
   }
 
-  async listarId(id) {
+  async listarId(id:number) {
     return await ActividadLudica.query().where('id', id)
   }
 
-  async actualizar(id, datos) {
+  async actualizar(id:number, datos:any) {
     const actividad = await ActividadLudica.findBy('id', id)
     if (actividad) {
       actividad.merge(datos)
@@ -24,7 +24,7 @@ class ActividadLudicaService {
     }
   }
 
-  async eliminar(id) {
+  async eliminar(id:number) {
     const actividad = await ActividadLudica.findBy('id', id)
     if (actividad) {
       await actividad.delete()

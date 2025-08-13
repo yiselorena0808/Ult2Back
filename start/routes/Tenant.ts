@@ -1,14 +1,62 @@
-import TenantStorage from '../../app/services/TenantStorage.js';
 import Route from "@adonisjs/core/services/router"
-import { Response } from '@adonisjs/core/http';
+import TenantStorage from "../../app/services/TenantStorage.js"
+import Usuario from "#models/usuario"
 
-const TenantRoutes = new TenantStorage();
 
-Route.get('/s', async(ctx) =>{
-    const tenantId = TenantStorage.getTenantId();
-    ctx.response.send(`Estás en el tenant: ${tenantId}`);
+async function tenantMiddleware(ctx, next) {
+  const tenantId = Number(ctx.request.header("x-tenant-id"))
+  if (!tenantId) {
+    return ctx.response.status(400).send({ error: "Falta el header x-tenant-id" })
+  }
+
+  TenantStorage.run(tenantId, async () => {
+    await next()
+  })
+}
+
+// GET - Consultar datos del tenant actual
+Route.get("/tenant", async (ctx) => {
+  const tenantId = TenantStorage.getTenantId()
+  return ctx.response.send({ mensaje: `Estás en el tenant ${tenantId}` })
+}).middleware(tenantMiddleware)
+
+Route.get('/usuarios', async (ctx) => {
+  const id_tenat = TenantStorage.getTenantId()
+  const usuarios = await Usuario.query().where('id_tenat', id_tenat)
+
+  return ctx.response.send({
+    tenant: id_tenat,
+    total: usuarios.length,
+    usuarios
+  })
 })
 
-Route.get('/config', async(ctx) =>{ const tenantId = TenantStorage.getTenantId();
-    ctx.response.json(`Configuración para el tenant: ${tenantId}`);
-})
+// POST - Crear algo en el tenant
+Route.post("/tenant", async (ctx) => {
+  const tenantId = TenantStorage.getTenantId()
+  const data = ctx.request.body()
+  return ctx.response.send({
+    mensaje: `Creado en tenant ${tenantId}`,
+    datos: data
+  })
+}).middleware(tenantMiddleware)
+
+// PUT - Actualizar algo en el tenant
+Route.put("/tenant/:id", async (ctx) => {
+  const tenantId = TenantStorage.getTenantId()
+  const { id } = ctx.params
+  const data = ctx.request.body()
+  return ctx.response.send({
+    mensaje: `Actualizado ID ${id} en tenant ${tenantId}`,
+    datos: data
+  })
+}).middleware(tenantMiddleware)
+
+// DELETE - Eliminar algo en el tenant
+Route.delete("/tenant/:id", async (ctx) => {
+  const tenantId = TenantStorage.getTenantId()
+  const { id } = ctx.params
+  return ctx.response.send({
+    mensaje: `Eliminado ID ${id} en tenant ${tenantId}`
+  })
+}).middleware(tenantMiddleware)

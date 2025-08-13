@@ -7,5 +7,5 @@ const authJwt = new AuthJwt()
 
 Route.post('/crearGestion', gestion.crearGestion).use(authJwt.handle.bind(authJwt))
 Route.get('/listarGestiones', gestion.listarGestiones).use(authJwt.handle.bind(authJwt))
-Route.put('/actualizarEstadoGestion/:id', gestion.actualizarEstado).use(authJwt.handle.bind(authJwt))
+Route.put('/actualizarGestion/:id', gestion.actualizarEstado).use(authJwt.handle.bind(authJwt))
 Route.delete('/eliminarGestion/:id', gestion.eliminarGestion).use(authJwt.handle.bind(authJwt))

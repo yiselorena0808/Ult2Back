@@ -25,8 +25,8 @@ class GestionController {
 
   async actualizarEstado({ params, request, response }) {
     try {
-      const actualizado = await gestionService.actualizarEstado(params.id, request.body())
-      return response.json({ msj: 'estado actualizado', datos: actualizado })
+      const actualizado = await gestionService.actualizar(params.id, request.body())
+      return response.json({ msj: 'gestion actualizada', datos: actualizado })
     } catch (error) {
       return response.json({ error: error.message, messages })
     }
