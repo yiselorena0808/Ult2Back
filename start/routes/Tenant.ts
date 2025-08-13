@@ -3,7 +3,7 @@ import TenantStorage from "../../app/services/TenantStorage.js"
 import Usuario from "#models/usuario"
 
 
-async function tenantMiddleware(ctx, next) {
+async function tenantMiddleware(ctx:any, next:any) {
   const tenantId = Number(ctx.request.header("x-tenant-id"))
   if (!tenantId) {
     return ctx.response.status(400).send({ error: "Falta el header x-tenant-id" })
@@ -22,6 +22,9 @@ Route.get("/tenant", async (ctx) => {
 
 Route.get('/usuarios', async (ctx) => {
   const id_tenat = TenantStorage.getTenantId()
+  if (!id_tenat) {
+      return ctx.response.status(400).send({ error: "No se encontró el tenant actual" })
+    }
   const usuarios = await Usuario.query().where('id_tenat', id_tenat)
 
   return ctx.response.send({

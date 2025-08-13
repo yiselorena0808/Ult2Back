@@ -9,12 +9,12 @@ app.use(express.json());
 app.use(tenantMiddleware);
 
 
-app.get('/s', (req, res) =>{
+app.get('/s', (req: any, res: any) =>{
     const tenantId = TenantStorage.getTenantId();
     res.send(`Estás en el tenant: ${tenantId}`);
 })
 
-app.get('/config', (req, res) =>{
+app.get('/config', (req: any, res: any) =>{
     const tenantId = TenantStorage.getTenantId();
     res.json(`Configuración para el tenant: ${tenantId}`);
 })

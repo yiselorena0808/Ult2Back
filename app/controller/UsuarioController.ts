@@ -1,6 +1,6 @@
 import UsuarioService from '#services/UsuarioService'
 import { messages } from '@vinejs/vine/defaults'
-import { json } from "stream/consumers"
+import express, { Request, Response } from 'express';
 
 const usuarioService = new UsuarioService()
 
