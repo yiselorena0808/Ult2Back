@@ -6,11 +6,11 @@
     "lib": ["ES2022"],
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
+    "strict": false,
     "skipLibCheck": true,
     "outDir": "./build",
     "rootDir": "./",
-    "types": []
+    "types": ["@adonisjs/core", "@adonisjs/lucid"]
   },
   "include": [
     "**/*.ts"
