@@ -6,6 +6,8 @@
     "lib": ["ES2022"],
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
+   "emitDecoratorMetadata": true,
     "strict": false,
     "skipLibCheck": true,
     "outDir": "./build",
