@@ -1,7 +1,20 @@
 {
   "extends": "@adonisjs/tsconfig/tsconfig.app.json",
   "compilerOptions": {
+    "baseUrl": ".",
     "target": "ES6",
+    "paths": {
+      "@ioc:Adonis/*": [
+        "node_modules/@adonisjs/*/build/adonis-typings"
+      ],
+      "@ioc:Adonis/Core/HttpContext": [
+        "node_modules/@adonisjs/core/build/src/HttpContext"
+      ]
+    },
+    "types": [
+      "@adonisjs/core",
+      "@adonisjs/lucid"
+    ],
     "module": "node16",
     "rootDir": "./",
     "outDir": "./build",

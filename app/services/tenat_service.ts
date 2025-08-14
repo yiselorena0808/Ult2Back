@@ -1,10 +1,15 @@
 import Tenat from '#models/tenat'
-import { getTenantId } from './TenantStorage.js'
+import  TenantStorage  from './TenantStorage.js'
 import type { ModelQueryBuilderContract } from '@adonisjs/lucid/types/model'
 
 export default class TenatService {
   private query(): ModelQueryBuilderContract<typeof Tenat, Tenat> {
-    const tenantId = getTenantId()
+    const tenantId = TenantStorage.getTenantId()
+
+    if (!tenantId) {
+      throw new Error('No tenant context found')
+    }
+    
     return Tenat.query().where('id_tenat', tenantId)
   }
 
