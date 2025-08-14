@@ -24,7 +24,13 @@
     "resolveJsonModule": true,
       "moduleResolution": "node16"
   },
-  "include": ["./**/*.ts"],
+  "include": ["./**/*.ts",  "start",
+    "app",
+    "config",
+    "contracts",
+    "database",
+    "bin",
+    "providers"],
   "exclude": [
     "node_modules",
     "build"
