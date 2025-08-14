@@ -10,7 +10,7 @@
     "skipLibCheck": true,
     "outDir": "./build",
     "rootDir": "./",
-    "types": ["@adonisjs/core", "@adonisjs/lucid"]
+    "types": []
   },
   "include": [
     "**/*.ts"
